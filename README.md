@@ -1,104 +1,115 @@
-# GLPI_home_page_customization
-# 📌 Personnalisation de GLPI – Support EXCO
+# Personnalisation de GLPI – Support EXCO
 
-Ce dépôt documente les modifications apportées à une instance GLPI auto-hébergée dans le cadre du projet Support EXCO. Il inclut des ajustements de l’interface, des statuts, des traductions, et de la page d’accueil self-service.
+Ce projet documente les modifications appliquées à GLPI dans le cadre du déploiement de la plateforme de support EXCO. Il comprend des ajustements sur l'affichage des statuts, la traduction, la page d’accueil self-service et les droits d’accès.
 
 ---
 
-## ✏️ 1. Modification des statuts des tickets (`src/Ticket.php`)
+## 1. Modification des statuts (`src/Ticket.php`)
 
-**Fichier modifié :**  
-`/var/www/html/glpi/src/Ticket.php`
+**Fichier :** `/var/www/html/glpi/src/Ticket.php`
 
-### ✅ Objectif :
-- Supprimer l'affichage du statut **"Processing (planned)"** sans casser le code
-- Ne pas afficher les tickets **supprimés**
+### Objectif :
+- Masquer le statut "Processing (planned)" sans le supprimer du backend
+- Retirer l’affichage des tickets supprimés dans la liste
 
-### 🔍 Détail du code modifié :
+### Code modifié :
 
 ```php
 $tab = [
    self::INCOMING => _x('status', 'New'),
    self::ASSIGNED => _x('status', 'Processing (assigned)'),
-   //self::PLANNED  => _x('status', 'Processing (planned)'), ← supprimé de l'affichage
+   //self::PLANNED  => _x('status', 'Processing (planned)'), ← masqué
    self::WAITING  => __('Pending'),
    self::SOLVED   => _x('status', 'Solved'),
    self::CLOSED   => _x('status', 'Closed')
 ];
-Suppression de l'affichage des tickets supprimés :
 ```
-Copier
-Modifier
+
+Suppression du lien vers les tickets supprimés :
+
+```php
 //$twig_params['items'][] = [
 //   'link'   => self::getSearchURL() . "?" . Toolbox::append_params($options),
 //   'text'   => __('Deleted'),
 //   'icon'   => 'fas fa-trash bg-red-lt',
 //   'count'  => $number_deleted
 //];
-🌐 2. Traduction : Changer "Title" en "Sujet"
-Fichier modifié :
-/var/www/html/glpi/locales/fr_FR.po
+```
 
-📝 Modification :
-po
-Copier
-Modifier
+---
+
+## 2. Traduction : "Title" devient "Sujet"
+
+**Fichier :** `/var/www/html/glpi/locales/fr_FR.po`
+
+### Modification appliquée :
+
+```po
 msgid "Title"
 msgstr "Sujet"
-🔁 Compiler le fichier .po en .mo :
-bash
-Copier
-Modifier
+```
+
+### Compilation du fichier `.po` en `.mo` :
+
+```bash
 msgfmt -o /var/www/html/glpi/locales/fr_FR.mo /var/www/html/glpi/locales/fr_FR.po
-🔄 3. Vider le cache et recharger le serveur web
-🔥 Vider le cache GLPI :
-bash
-Copier
-Modifier
+```
+
+---
+
+## 3. Nettoyage du cache et rechargement du serveur
+
+### Vider le cache de GLPI :
+
+```bash
 rm -rf /var/www/html/glpi/files/_cache/*
-♻️ Recharger NGINX ou Apache :
-Pour NGINX :
+```
 
-bash
-Copier
-Modifier
+### Recharger le serveur web :
+
+**Pour NGINX :**
+```bash
 sudo systemctl reload nginx
-Pour Apache :
+```
 
-bash
-Copier
-Modifier
+**Pour Apache :**
+```bash
 sudo systemctl reload apache2
-🖼️ 4. Personnalisation de la page d’accueil Self-Service
-Fichier modifié :
-/var/www/html/glpi/templates/pages/self-service/home.html.twig
+```
 
-✅ Objectif :
-Modifier l'apparence de la page d’accueil pour les utilisateurs Self-Service
+---
 
-Ajouter un message de bienvenue personnalisé
+## 4. Personnalisation de la page d’accueil Self-Service
 
-Changer la structure et le logo si besoin
+**Fichier :** `/var/www/html/glpi/templates/pages/self-service/home.html.twig`
 
-🧰 Commandes utiles
-bash
-Copier
-Modifier
-# Compiler les traductions
+### Objectifs :
+- Ajouter un message de bienvenue personnalisé :
+  > Bienvenue sur la plateforme de support EXCO. Cette plateforme vous permet de centraliser, suivre et structurer vos demandes de manière professionnelle.
+- Modifier la disposition de la page
+- Changer ou retirer le logo
+- Réorganiser visuellement l’accueil pour les comptes self-service
+
+---
+
+## 5. Commandes utiles
+
+```bash
+# Compiler les traductions (PO → MO)
 msgfmt -o /var/www/html/glpi/locales/fr_FR.mo /var/www/html/glpi/locales/fr_FR.po
 
-# Vider le cache GLPI
+# Supprimer le cache de GLPI
 rm -rf /var/www/html/glpi/files/_cache/*
 
-# Recharger le serveur web (selon votre stack)
+# Recharger le serveur web
 sudo systemctl reload nginx
+# ou
 sudo systemctl reload apache2
-✍️ Auteur
-Taha Laachari
-Support IT / Déploiement GLPI pour EXCO
+```
 
-pgsql
-Copier
-Modifier
+---
 
-Dis-moi si tu veux une version anglaise ou une capture d’écran pour illustrer dans GitHub.
+## Auteur
+
+**Taha Laachari**  
+Support IT – Déploiement GLPI pour EXCO
