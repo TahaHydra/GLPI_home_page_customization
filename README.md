@@ -111,5 +111,4 @@ sudo systemctl reload apache2
 
 ## Auteur
 
-**Taha Laachari**  
-Support IT – Déploiement GLPI pour EXCO
+**Taha**  
