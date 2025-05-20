@@ -26,7 +26,7 @@ $tab = [
    self::CLOSED   => _x('status', 'Closed')
 ];
 Suppression de l'affichage des tickets supprimés :
-php
+```
 Copier
 Modifier
 //$twig_params['items'][] = [
